@@ -38,6 +38,12 @@
 #include <math.h>
 #include <string.h>
 
+#if defined _MSC_VER
+#  define THREAD_LOCAL __declspec(thread)
+#else
+#  define THREAD_LOCAL _Thread_local
+#endif
+
 /* Global Variables */
 dd_boolean dd_debug               =dd_FALSE;
 dd_boolean dd_log                 =dd_FALSE;
@@ -144,8 +150,8 @@ void dd_InitialDataSetup(dd_ConePtr cone)
 {
   long j, r;
   dd_rowset ZSet;
-  static _Thread_local dd_Arow Vector1,Vector2;
-  static _Thread_local dd_colrange last_d=0;
+  static THREAD_LOCAL dd_Arow Vector1,Vector2;
+  static THREAD_LOCAL dd_colrange last_d=0;
 
   if (last_d < cone->d){
     if (last_d>0) {

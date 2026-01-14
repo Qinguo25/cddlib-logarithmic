@@ -11,7 +11,13 @@
 
 #include <stdint.h>
 
-static _Thread_local uint64_t x; /* The state can be seeded with any value. */
+#if defined _MSC_VER
+#  define THREAD_LOCAL __declspec(thread)
+#else
+#  define THREAD_LOCAL _Thread_local
+#endif
+
+static THREAD_LOCAL uint64_t x; /* The state can be seeded with any value. */
 
 static void srand_splitmix64(uint64_t seed) {
 	x = seed;

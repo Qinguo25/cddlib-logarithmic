@@ -23,7 +23,13 @@
 
 #define LUTBLOCKS(set) (((set[0]-1)/SETBITS+1)*(sizeof(long)/sizeof(set_card_lut_t)))
 
-static _Thread_local unsigned char set_card_lut[]={
+#if defined _MSC_VER
+#  define THREAD_LOCAL __declspec(thread)
+#else
+#  define THREAD_LOCAL _Thread_local
+#endif
+
+static THREAD_LOCAL unsigned char set_card_lut[]={
 0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
 1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
 1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,

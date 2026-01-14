@@ -18,13 +18,19 @@
 #include <math.h>
 #include <string.h>
 
+#if defined _MSC_VER
+#  define THREAD_LOCAL __declspec(thread)
+#else
+#  define THREAD_LOCAL _Thread_local
+#endif
+
 void dd_CheckAdjacency(dd_ConePtr cone,
     dd_RayPtr *RP1, dd_RayPtr *RP2, dd_boolean *adjacent)
 {
   dd_RayPtr TempRay;
   dd_boolean localdebug=dd_FALSE;
-  static _Thread_local dd_rowset Face, Face1;
-  static _Thread_local dd_rowrange last_m=0;
+  static THREAD_LOCAL dd_rowset Face, Face1;
+  static THREAD_LOCAL dd_rowrange last_m=0;
   
   if (last_m!=cone->m) {
     if (last_m>0){
@@ -291,8 +297,8 @@ void dd_ConditionalAddEdge(dd_ConePtr cone,
   dd_AdjacencyType *NewEdge;
   dd_boolean localdebug=dd_FALSE;
   dd_rowset ZSmin, ZSmax;
-  static _Thread_local dd_rowset Face, Face1;
-  static _Thread_local dd_rowrange last_m=0;
+  static THREAD_LOCAL dd_rowset Face, Face1;
+  static THREAD_LOCAL dd_rowrange last_m=0;
   
   if (last_m!=cone->m) {
     if (last_m>0){
@@ -1084,8 +1090,8 @@ void dd_CreateNewRay(dd_ConePtr cone,
   /*Create a new ray by taking a linear combination of two rays*/
   dd_colrange j;
   mytype a1, a2, v1, v2;
-  static _Thread_local dd_Arow NewRay;
-  static _Thread_local dd_colrange last_d=0;
+  static THREAD_LOCAL dd_Arow NewRay;
+  static THREAD_LOCAL dd_colrange last_d=0;
   dd_boolean localdebug=dd_debug;
 
   dd_init(a1); dd_init(a2); dd_init(v1); dd_init(v2);
