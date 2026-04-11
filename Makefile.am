@@ -18,3 +18,6 @@ pkgconfig_DATA     = cddlib.pc
 if GMP
 pkgconfig_DATA    += cddgmp.pc
 endif
+if LOGARITHMIC
+pkgconfig_DATA    += cddlog.pc
+endif
