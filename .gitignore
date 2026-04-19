@@ -207,3 +207,7 @@ tags
 
 ### Rever ###
 /rever
+
+### Local/Platform Metadata ###
+.vscode/
+.github/
