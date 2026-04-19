@@ -74,7 +74,7 @@ typedef enum {
 } dd_RowOrderType;
 
 typedef enum {
-  dd_Unknown=0, dd_Real, dd_Rational, dd_Integer
+  dd_Unknown=0, dd_Real, dd_Rational, dd_Integer, dd_Logarithmic
 } dd_NumberType;
 
 typedef enum {

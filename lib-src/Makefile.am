@@ -20,3 +20,5 @@ setoper.h \
 splitmix64.h
 
 include ./Makefile.gmp.am
+
+include ./Makefile.log.am

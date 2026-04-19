@@ -396,6 +396,10 @@ void dd_SetNumberType(char *line,dd_NumberType *number,dd_ErrorType *Error)
     *number = dd_Real;
     return;
   }
+  else if (strncmp(line,"logarithmic",11)==0 || strncmp(line,"log",3)==0) {
+    *number = dd_Logarithmic;
+    return;
+  }
   else { 
     *number=dd_Unknown;
     *Error=dd_ImproperInputFormat;

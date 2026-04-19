@@ -46,6 +46,24 @@
  #define dd_sgn(a)               mpq_sgn(a)
     /* returns nonzero if equal.  much faster than mpq_cmp. */
  #define dd_get_d(a)             mpq_get_d(a)     
+#elif defined CDDLOGARITHMIC
+ #include "cddlogarithmic.h"
+ #define dd_ARITHMETIC "symbolic log backend"
+ #define dd_init(a)              ddl_init(a)
+ #define dd_clear(a)             ddl_clear(a)
+ #define dd_set(a, b)            ddl_set(a,b)
+ #define dd_set_si(a, b)         ddl_set_si(a,b)
+ #define dd_set_si2(a, b, c)     ddl_set_si2(a,b,c)
+ #define dd_set_d(a, b)          ddl_set_d(a,b)
+ #define dd_add(a, b, c)         ddl_add(a,b,c)
+ #define dd_sub(a, b, c)         ddl_sub(a,b,c)
+ #define dd_mul(a, b, c)         ddl_mul(a,b,c)
+ #define dd_div(a, b, c)         ddl_div(a,b,c)
+ #define dd_neg(a, b)            ddl_neg(a,b)
+ #define dd_inv(a, b)            ddl_inv(a,b)
+ #define dd_cmp(a, b)            ddl_cmp(a,b)
+ #define dd_sgn(a)               ddl_sgn(a)
+ #define dd_get_d(a)             ddl_get_d(a)
 #elif defined GMPFLOAT
  #include "gmp.h"
  #define dd_ARITHMETIC "GMP float"
@@ -89,6 +107,8 @@
 
 #if defined GMPRATIONAL
  typedef mpq_t mytype;
+#elif defined CDDLOGARITHMIC
+ /* mytype comes from cddlogarithmic.h */
 #elif defined GMPFLOAT
  typedef mpf_t mytype;
 #else /* built-in C double */

@@ -156,6 +156,9 @@ dd_NumberType dd_GetNumberType(const char *line)
   else if (strncmp(line, "real", 4)==0) {
     nt = dd_Real;
   }
+  else if (strncmp(line, "logarithmic", 11)==0 || strncmp(line, "log", 3)==0) {
+    nt = dd_Logarithmic;
+  }
   else { 
     nt=dd_Unknown;
   }
@@ -1119,6 +1122,8 @@ void dd_WriteAmatrix(FILE *f, dd_Amatrix A, long rowmax, long colmax)
   fprintf(f, "begin\n");
 #if defined GMPRATIONAL
   fprintf(f, " %ld %ld rational\n",rowmax, colmax);
+#elif defined CDDLOGARITHMIC
+  fprintf(f, " %ld %ld logarithmic\n",rowmax, colmax);
 #else
   fprintf(f, " %ld %ld real\n",rowmax, colmax);
 #endif
@@ -1215,7 +1220,22 @@ void dd_WriteMatrix(FILE *f, dd_MatrixPtr M)
       if (set_member(i, M->linset)) fprintf(f, " %ld", i);
     fprintf(f, "\n");
   }
+#if defined(CDDLOGARITHMIC)
+  if (M->representation==dd_Inequality) {
+    fprintf(f, "begin\n");
+    fprintf(f, " %ld %ld logarithmic\n", M->rowsize, M->colsize);
+    for (i=1; i <= M->rowsize; i++) {
+      if (!ddl_try_fprint_hrep_row(f, M->matrix[i-1], M->colsize)) {
+        dd_WriteArow(f, M->matrix[i-1], M->colsize);
+      }
+    }
+    fprintf(f, "end\n");
+  } else {
+    dd_WriteAmatrix(f, M->matrix, M->rowsize, M->colsize);
+  }
+#else
   dd_WriteAmatrix(f, M->matrix, M->rowsize, M->colsize);
+#endif
   if (M->objective!=dd_LPnone){
     if (M->objective==dd_LPmax)
       fprintf(f, "maximize\n");
@@ -1279,6 +1299,9 @@ void dd_WriteNumber(FILE *f, mytype x)
 #if defined GMPRATIONAL
   fprintf(f," ");
   mpq_out_str(f, 10, x);
+#elif defined CDDLOGARITHMIC
+  fprintf(f," ");
+  ddl_fprint(f, x);
 #else
   dd_WriteReal(f, x);
 #endif
@@ -1675,7 +1698,7 @@ void dd_WriteErrorMessages(FILE *f, dd_ErrorType Error)
     fprintf(f,"*Input Error: Input format is not correct.\n");
     fprintf(f,"*Format:\n");
     fprintf(f," begin\n");
-    fprintf(f,"   m   n  NumberType(real, rational or integer)\n");
+    fprintf(f,"   m   n  NumberType(real, rational, integer or logarithmic)\n");
     fprintf(f,"   b  -A\n");
     fprintf(f," end\n");
     break;
@@ -1944,6 +1967,13 @@ void dd_sread_rational_value (const char *s, mytype value)
    /* reads a rational value from the specified string "s" and assigns it to "value"    */
    
 {
+#if defined CDDLOGARITHMIC
+   if (ddl_parse_expression(value, s) != 0) {
+     fprintf(stderr, "cddlogarithmic: cannot parse expression '%s'\n", s);
+     dd_set_si(value, 0L);
+   }
+   return;
+#else
    char     *numerator_s=NULL, *denominator_s=NULL, *position;
    int      sign = 1;
    double   numerator, denominator;
@@ -2006,6 +2036,7 @@ void dd_sread_rational_value (const char *s, mytype value)
      fprintf(stderr,"rational_read: "); 
      dd_WriteNumber(stderr,value); fprintf(stderr,"\n");
    }
+#endif
 }
    
 

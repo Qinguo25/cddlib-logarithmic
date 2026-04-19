@@ -45,6 +45,11 @@ void dd_set_global_constants()
  mpq_set_ui(dd_one,1U,1U);
  mpq_set_si(dd_minusone,-1L,1U);
  ddf_set_global_constants();
+#elif defined CDDLOGARITHMIC
+ dd_set_si(dd_zero,0L);
+ dd_set_si(dd_purezero,0L);
+ dd_set_si(dd_one,1L);
+ dd_set_si(dd_minusone,-1L);
 #elif defined GMPFLOAT
  mpf_set_d(dd_zero,dd_almostzero);
  mpf_set_ui(dd_purezero,0U);
